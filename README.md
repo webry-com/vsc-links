@@ -8,7 +8,7 @@
 
 ## Setup
 
-- Install the extension [here](https://marketplace.visualstudio.com/items?itemName=webry.vscode-links)
+- Install the extension [here](https://marketplace.visualstudio.com/items?itemName=webry.vsc-links)
 - Create a config file `Ctrl+Shift+P` -> `VSC Links: Create Config File`
 - _Optional_ `npm i -D vscl@latest` (Adds typings for easier config editing)
 
