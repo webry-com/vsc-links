@@ -1,11 +1,11 @@
-import * as vscode from "vscode"
 import fs from "fs"
-import { vscLog } from "../utils/output"
-import { getConfig } from "../utils/watchers"
-import path from "path"
 import { minimatch } from "minimatch"
+import path from "path"
+import * as vscode from "vscode"
 import type { z } from "zod"
+import { vscLog } from "../utils/output"
 import { handlerResponseSchema, linkButtonSchema } from "../utils/schemas"
+import { getConfig } from "../utils/watchers"
 
 const linkProviders: Map<
   LinkDefinitionProvider,
@@ -18,21 +18,21 @@ type VSCLButton = z.infer<typeof linkButtonSchema>
 type VSCLDocumentLink = vscode.DocumentLink &
   (
     | {
-        range: vscode.Range
-        tooltip?: string
-        description?: string
-        buttons?: VSCLButton[]
-        _originalVsclTarget?: string
-        _vsclTarget?: vscode.Uri
-        _jumpPattern?: RegExp | string
-      }
+      range: vscode.Range
+      tooltip?: string
+      description?: string
+      buttons?: VSCLButton[]
+      _originalVsclTarget?: string
+      _vsclTarget?: vscode.Uri
+      _jumpPattern?: RegExp | string
+    }
     | {
-        target: vscode.Uri
-        range: vscode.Range
-        tooltip?: string
-        description?: string
-        buttons?: VSCLButton[]
-      }
+      target: vscode.Uri
+      range: vscode.Range
+      tooltip?: string
+      description?: string
+      buttons?: VSCLButton[]
+    }
   )
 
 const FILE_PREFIX =
@@ -53,7 +53,7 @@ export function createLinkProvider() {
 }
 
 export class LinkDefinitionProvider implements vscode.DocumentLinkProvider {
-  constructor() {}
+  constructor() { }
 
   provideDocumentLinks(document: vscode.TextDocument): VSCLDocumentLink[] | null {
     const workspace = vscode.workspace.getWorkspaceFolder(document.uri)
@@ -81,7 +81,6 @@ export class LinkDefinitionProvider implements vscode.DocumentLinkProvider {
     const links: VSCLDocumentLink[] = []
     for (const link of configLinks) {
       link.pattern = Array.isArray(link.pattern) ? link.pattern : [link.pattern]
-      //vscLog("Warn", link.pattern.length + " B LINKS (PATTERN)")
       for (const pattern of link.pattern) {
         const regEx = new RegExp(pattern, pattern.flags)
         let match: RegExpExecArray | null
@@ -106,7 +105,7 @@ export class LinkDefinitionProvider implements vscode.DocumentLinkProvider {
               strings.forEach((string, i) => {
                 builtString += string + (values[i] || "")
               })
-              const filePath = `${workspace.uri.fsPath}/${builtString}`.replace(/[\\\/]+/g, "/")
+              const filePath = `${workspace.uri.fsPath}/${builtString}`.replace(/[\\/]+/g, "/")
               return `${FILE_PREFIX}${filePath}`
             },
             file(strings: TemplateStringsArray, ...values: string[]): string {
@@ -114,8 +113,11 @@ export class LinkDefinitionProvider implements vscode.DocumentLinkProvider {
               strings.forEach((string, i) => {
                 builtString += string + (values[i] || "")
               })
-              const filePath = builtString.replace(/[\\\/]+/g, "/")
+              const filePath = builtString.replace(/[\\/]+/g, "/")
               return `${FILE_PREFIX}${filePath}`
+            },
+            reload(): void {
+              vscode.commands.executeCommand("vscode-links.refreshVSCodeLinksProviders")
             },
             log(...logs: any[]) {
               vscLog("Info", logs.map((log) => log.toString()).join("  "))
@@ -143,17 +145,31 @@ export class LinkDefinitionProvider implements vscode.DocumentLinkProvider {
               description: result.description,
               buttons: result.buttons,
               _originalVsclTarget: result.target,
-              _vsclTarget: vscode.Uri.parse(result.target),
+              _vsclTarget: vscode.Uri.parse(result.target.replace(/:(\d+)(?::(\d+))?$/, '')),
               _jumpPattern: result.jumpPattern,
             })
           } else {
-            links.push({
-              target: vscode.Uri.parse(result.target),
-              range: new vscode.Range(document.positionAt(range.start), document.positionAt(range.end)),
-              tooltip: result.tooltip || "",
-              description: result.description,
-              buttons: result.buttons,
-            })
+            // Check if the target has :line:column format
+            const lineColumnMatch = result.target.match(/:(\d+)(?::(\d+))?$/)
+            if (lineColumnMatch) {
+              links.push({
+                range: new vscode.Range(document.positionAt(range.start), document.positionAt(range.end)),
+                tooltip: result.tooltip || "",
+                description: result.description,
+                buttons: result.buttons,
+                _originalVsclTarget: result.target,
+                _vsclTarget: vscode.Uri.parse(result.target.replace(/:(\d+)(?::(\d+))?$/, '')),
+                _jumpPattern: undefined,
+              })
+            } else {
+              links.push({
+                target: vscode.Uri.parse(result.target),
+                range: new vscode.Range(document.positionAt(range.start), document.positionAt(range.end)),
+                tooltip: result.tooltip || "",
+                description: result.description,
+                buttons: result.buttons,
+              })
+            }
           }
         }
       }
@@ -167,10 +183,24 @@ export class LinkDefinitionProvider implements vscode.DocumentLinkProvider {
   }
 
   resolveDocumentLink(
-    link: vscode.DocumentLink & { _vsclTarget: vscode.Uri; _jumpPattern: RegExp | string; _originalVsclTarget: string },
+    link: vscode.DocumentLink & { _vsclTarget: vscode.Uri; _jumpPattern?: RegExp | string; _originalVsclTarget: string },
   ): vscode.ProviderResult<vscode.DocumentLink> {
     if (link.target) {
       return link
+    }
+
+    // Parse :line:column format from the original target
+    const lineColumnMatch = link._originalVsclTarget.match(/:(\d+)(?::(\d+))?$/)
+    if (lineColumnMatch) {
+      const line = parseInt(lineColumnMatch[1], 10)
+      // Remove the :line:column part from the target to get the actual file path
+      const cleanTarget = link._originalVsclTarget.replace(/:(\d+)(?::(\d+))?$/, '')
+      link.target = vscode.Uri.parse(`${cleanTarget}#L${line}`)
+      return {
+        range: link.range,
+        target: link.target,
+        tooltip: link.tooltip,
+      }
     }
 
     if (link._vsclTarget.scheme === "file") {

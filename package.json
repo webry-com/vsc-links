@@ -1,11 +1,11 @@
 {
-  "name": "vscode-links",
-  "displayName": "VSCode Links",
+  "name": "vsc-links",
+  "displayName": "VSC Links",
   "description": "Create any links to files and websites based on patterns.",
   "author": "Samuel Braun <sam@webry.com>",
-  "publisher": "web-dev-sam",
+  "publisher": "webry",
   "license": "GPL-3.0-only",
-  "version": "2.2.16",
+  "version": "2.3.0",
   "icon": "icon.png",
   "homepage": "https://github.com/webry-com/vscode-links#readme",
   "engines": {
@@ -75,11 +75,11 @@
     "@types/vscode": "^1.90.0",
     "@vscode/test-cli": "^0.0.8",
     "@vscode/test-electron": "^2.3.9",
-    "esbuild": "^0.21.5",
+    "esbuild": "^0.25.8",
     "globals": "^15.6.0",
     "prettier": "^3.3.2",
     "typescript": "^5.3.3",
-    "vscl": "^2.2.0"
+    "vscl": "^2.3.0"
   },
   "dependencies": {
     "c12": "^1.11.1",

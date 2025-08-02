@@ -39,6 +39,7 @@ export const configSchema = object({
             linkText: string(),
             workspace: any(),
             file: any(),
+            reload: any(),
             log: any(),
           }),
         )

@@ -1,6 +1,7 @@
 import * as vscode from "vscode"
 import { LinkDefinitionProvider } from "../providers/linkProvider"
 import { v4 } from "uuid"
+import { vscLog } from "../utils/output"
 
 const linkProviders: Map<
   LinkButtonHoverProvider,
@@ -39,7 +40,48 @@ export class LinkButtonHoverProvider implements vscode.HoverProvider {
     link.buttons?.forEach((button) => {
       const title = button.title.replace(/([[\]()\\])/g, "\\$1")
 
-      if ("target" in button) {
+      if ("target" in button && button.target.match(/:\d+(?::\d+)?$/)) {
+        // Handle file:line or file:line:column format manually since VSCode markdown doesn't support it
+        markdown.isTrusted = true
+
+        const token = v4()
+        buttonHandlers.set(token, () => {
+          const match = button.target.match(/:(\d+)(?::(\d+))?$/)
+
+          let filePath: string
+          let lineNumber: number = 1
+          let columnNumber: number = 0
+
+          if (match) {
+            filePath = button.target.replace(/:(\d+)(?::(\d+))?$/, '') // Remove :line:column from end
+            lineNumber = parseInt(match[1], 10)
+            columnNumber = match[2] ? parseInt(match[2], 10) : 0
+          } else {
+            filePath = button.target
+          }
+
+          vscLog("Info", `Opening file: ${filePath}`)
+          const uri = vscode.Uri.parse(filePath, true)
+          vscode.workspace.openTextDocument(uri).then(doc => {
+            vscLog("Info", `Successfully opened: ${doc.uri.toString()}`)
+
+            vscode.window.showTextDocument(doc).then(editor => {
+              const position = new vscode.Position(lineNumber - 1, Math.max(0, columnNumber - 1))
+              editor.selection = new vscode.Selection(position, position)
+              editor.revealRange(new vscode.Range(position, position))
+            })
+          })
+        })
+
+        const commandUri = vscode.Uri.parse(
+          `command:vscode-links.linkButton?${encodeURIComponent(
+            JSON.stringify({
+              actionToken: token,
+            }),
+          )}`,
+        )
+        markdowns.push(`[${title}](${commandUri})`)
+      } else if ("target" in button) {
         markdowns.push(`[${title}](${button.target})`)
       } else {
         markdown.isTrusted = true
