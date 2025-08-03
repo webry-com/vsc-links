@@ -18,9 +18,9 @@ Read the full docs [here](https://vscl.webry.com/getting-started.html)
 
 ## Previews
 
-![](./previews/eslint-comment.png)
-![](./previews/eslint-config.png)
 ![](./previews/out-git.png)
+![](./previews/eslint-comment.png)
+![](./previews/axios-laravel.png)
 
 ## Debugging your config
 
@@ -66,7 +66,7 @@ export default {
       handle: ({ linkText }) => {
         const issue = linkText.replace("git#", "")
         return {
-          target: `https://github.com/webry-com/vscode-links/issues/${issue}`,
+          target: `https://github.com/webry-com/vsc-links/issues/${issue}`,
         }
       },
     },

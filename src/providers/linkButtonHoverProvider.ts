@@ -74,7 +74,7 @@ export class LinkButtonHoverProvider implements vscode.HoverProvider {
         })
 
         const commandUri = vscode.Uri.parse(
-          `command:vscode-links.linkButton?${encodeURIComponent(
+          `command:vsc-links.linkButton?${encodeURIComponent(
             JSON.stringify({
               actionToken: token,
             }),
@@ -90,7 +90,7 @@ export class LinkButtonHoverProvider implements vscode.HoverProvider {
         buttonHandlers.set(token, button.action)
 
         const commandUri = vscode.Uri.parse(
-          `command:vscode-links.linkButton?${encodeURIComponent(
+          `command:vsc-links.linkButton?${encodeURIComponent(
             JSON.stringify({
               actionToken: token,
             }),

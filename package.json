@@ -5,9 +5,9 @@
   "author": "Samuel Braun <sam@webry.com>",
   "publisher": "webry",
   "license": "GPL-3.0-only",
-  "version": "2.3.0",
+  "version": "2.4.1",
   "icon": "icon.png",
-  "homepage": "https://github.com/webry-com/vscode-links#readme",
+  "homepage": "https://github.com/webry-com/vsc-links#readme",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -16,7 +16,7 @@
   ],
   "bugs": {
     "email": "sam@webry.com",
-    "url": "https://github.com/webry-com/vscode-links/issues"
+    "url": "https://github.com/webry-com/vsc-links/issues"
   },
   "keywords": [
     "links",
@@ -25,24 +25,24 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/webry-com/vscode-links"
+    "url": "git+https://github.com/webry-com/vsc-links"
   },
   "activationEvents": [
     "onStartupFinished"
   ],
-  "main": "./out/extension.js",
+  "main": "./out/main.js",
   "contributes": {
     "commands": [
       {
-        "command": "vscode-links.createConfig",
+        "command": "vsc-links.createConfig",
         "title": "VSC Links: Create Config File"
       },
       {
-        "command": "vscode-links.restartVSCodeLinks",
+        "command": "vsc-links.restartVSCodeLinks",
         "title": "VSC Links: Restart"
       },
       {
-        "command": "vscode-links.refreshVSCodeLinksProviders",
+        "command": "vsc-links.refreshVSCodeLinksProviders",
         "title": "VSC Links: Refresh Config"
       }
     ]
@@ -63,10 +63,12 @@
   "scripts": {
     "watch": "tsc -watch -p ./",
     "vscode:prepublish": "npm run compile",
-    "pretest": "npm run compile",
     "compile": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node --minify",
     "test": "vscode-test",
-    "prerel": "vsce publish --pre-release"
+    "pretest": "npm run compile",
+    "prepack": "vsce package --pre-release",
+    "prepubl": "vsce publish --pre-release",
+    "rel": "vsce publish"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",

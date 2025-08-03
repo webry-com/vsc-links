@@ -5,7 +5,7 @@ import path from "path"
 import { registerOutputChannel, vscLog } from "./utils/output"
 import { ConfigType, createBaseConfig } from "./utils/defaults"
 import { askWorkspace } from "./utils/vscode"
-import { updateConfigs, disposeConfigWatchers, watchConfigFiles, getConfig } from "./utils/watchers"
+import { updateConfigs, disposeConfigWatchers, watchConfigFiles } from "./utils/watchers"
 import { createLinkHoverProvider, disposeAllLinkHoverProviders } from "./providers/linkHoverProvider"
 import {
   createLinkButtonHoverProvider,
@@ -42,7 +42,7 @@ export function deactivate() {
 
 function registerRestartVSCodeLinksCommand(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand("vscode-links.restartVSCodeLinks", async () => {
+    vscode.commands.registerCommand("vsc-links.restartVSCodeLinks", async () => {
       disposeAllLinkProviders()
       disposeAllLinkHoverProviders()
       disposeAllLinkButtonHoverProviders()
@@ -62,7 +62,7 @@ function registerRestartVSCodeLinksCommand(context: vscode.ExtensionContext) {
 
 function registerRefreshProvidersVSCodeLinksCommand(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand("vscode-links.refreshVSCodeLinksProviders", async () => {
+    vscode.commands.registerCommand("vsc-links.refreshVSCodeLinksProviders", async () => {
       disposeAllLinkProviders()
       disposeAllLinkHoverProviders()
       disposeAllLinkButtonHoverProviders()
@@ -78,7 +78,7 @@ function registerRefreshProvidersVSCodeLinksCommand(context: vscode.ExtensionCon
 
 function registerCreateConfigCommand(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand("vscode-links.createConfig", async () => {
+    vscode.commands.registerCommand("vsc-links.createConfig", async () => {
       const selectedWorkspace = await askWorkspace()
       if (!selectedWorkspace) {
         return
@@ -110,7 +110,7 @@ function registerCreateConfigCommand(context: vscode.ExtensionContext) {
 
 function registerLinkButtonCommand(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand("vscode-links.linkButton", (args: { actionToken: string }) => {
+    vscode.commands.registerCommand("vsc-links.linkButton", (args: { actionToken: string }) => {
       const action = getButtonActionHandler(args.actionToken)
       action?.()
     }),

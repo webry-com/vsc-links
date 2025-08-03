@@ -117,7 +117,7 @@ export class LinkDefinitionProvider implements vscode.DocumentLinkProvider {
               return `${FILE_PREFIX}${filePath}`
             },
             reload(): void {
-              vscode.commands.executeCommand("vscode-links.refreshVSCodeLinksProviders")
+              vscode.commands.executeCommand("vsc-links.refreshVSCodeLinksProviders")
             },
             log(...logs: any[]) {
               vscLog("Info", logs.map((log) => log.toString()).join("  "))

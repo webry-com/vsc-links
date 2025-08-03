@@ -14,13 +14,13 @@ export default {
       handle: ({ /* Ctrl + Space */ }) => {
         // Your magic 🧙‍♂️
         return {
-          target: "https://github.com/webry-com/vscode-links#readme",
+          target: "https://github.com/webry-com/vsc-links#readme",
           tooltip: "Go to VSCode ReadMe.",
           description: "## VSCode Links\\nClick to go to the README.",
           buttons: [
             {
               title: "To the README, wooo",
-              target: "https://github.com/webry-com/vscode-links#readme"
+              target: "https://github.com/webry-com/vsc-links#readme"
             }
           ]
         };
@@ -40,13 +40,13 @@ export default {
       handle: ({ /* Ctrl + Space */ }) => {
         // Your magic 🧙‍♂️
         return {
-          target: "https://github.com/webry-com/vscode-links#readme",
+          target: "https://github.com/webry-com/vsc-links#readme",
           tooltip: "Go to VSCode ReadMe.",
           description: "## VSCode Links\\nClick to go to the README.",
           buttons: [
             {
               title: "To the README, wooo",
-              target: "https://github.com/webry-com/vscode-links#readme"
+              target: "https://github.com/webry-com/vsc-links#readme"
             }
           ]
         };
@@ -66,13 +66,13 @@ exports.default = {
       handle: ({ /* Ctrl + Space */ }) => {
         // Your magic 🧙‍♂️
         return {
-          target: "https://github.com/webry-com/vscode-links#readme",
+          target: "https://github.com/webry-com/vsc-links#readme",
           tooltip: "Go to VSCode ReadMe.",
           description: "## VSCode Links\\nClick to go to the README.",
           buttons: [
             {
               title: "To the README, wooo",
-              target: "https://github.com/webry-com/vscode-links#readme"
+              target: "https://github.com/webry-com/vsc-links#readme"
             }
           ]
         };
@@ -92,13 +92,13 @@ export default {
       handle: ({ /* Ctrl + Space */ }) => {
         // Your magic 🧙‍♂️
         return {
-          target: "https://github.com/webry-com/vscode-links#readme",
+          target: "https://github.com/webry-com/vsc-links#readme",
           tooltip: "Go to VSCode ReadMe.",
           description: "## VSCode Links\\nClick to go to the README.",
           buttons: [
             {
               title: "To the README, wooo",
-              target: "https://github.com/webry-com/vscode-links#readme"
+              target: "https://github.com/webry-com/vsc-links#readme"
             }
           ]
         };
